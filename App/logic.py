@@ -243,20 +243,30 @@ def get_crimes_by_range_area(analyzer, initialArea, finalArea):
     finalArea = int(finalArea)
     lst = rbt.values(analyzer["areaIndex"], initialArea, finalArea)
     totalcrimes = 0
-    for lstarea in lst["elements"]:
-        totalcrimes += al.size(lstarea)
+    if "elements" in lst:
+        for lstarea in lst["elements"]:
+            totalcrimes += al.size(lstarea)
+    else:
+        node = lst["first"]
+        while node is not None:
+            totalcrimes += al.size(node["info"])
+            node = node["next"]
     return totalcrimes
 
 def get_crimes_by_range(analyzer, initialDate, finalDate):
     """
     Retorna el numero de crimenes en un rago de fechas.
     """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
     lst = rbt.values(analyzer["dateIndex"], initialDate.date(), finalDate.date())
     totalcrimes = 0
-    for lstdate in lst["elements"]:
-        totalcrimes += al.size(lstdate["lstcrimes"])
+    if "elements" in lst:
+        for lstdate in lst["elements"]:
+            totalcrimes += al.size(lstdate["lstcrimes"])
+    else:
+        node = lst["first"]
+        while node is not None:
+            totalcrimes += al.size(node["info"]["lstcrimes"])
+            node = node["next"]
     return totalcrimes
 
 
